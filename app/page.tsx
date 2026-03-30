@@ -1,17 +1,7 @@
 import { CartIndicator } from "@/components/cart-indicator";
 import { ProductCatalog } from "@/components/product-catalog";
 import { ThemeToggle } from "@/components/theme-toggle";
-import type { Product } from "@/lib/types/product";
-
-const PRODUCTS_URL = "https://fakestoreapi.com/products";
-
-async function getProducts(): Promise<Product[]> {
-  const res = await fetch(PRODUCTS_URL, { next: { revalidate: 3600 } });
-  if (!res.ok) {
-    throw new Error(`Products request failed: ${res.status}`);
-  }
-  return res.json() as Promise<Product[]>;
-}
+import { fetchProducts } from "@/lib/fetch-products";
 
 export const metadata = {
   title: "Products",
@@ -19,10 +9,10 @@ export const metadata = {
 };
 
 export default async function Home() {
-  let products: Product[];
+  let products: Awaited<ReturnType<typeof fetchProducts>>;
 
   try {
-    products = await getProducts();
+    products = await fetchProducts({ next: { revalidate: 3600 } });
   } catch {
     return (
       <main className="relative mx-auto flex min-h-[50vh] max-w-6xl flex-col items-center justify-center px-4 py-16">
