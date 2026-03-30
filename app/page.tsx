@@ -37,9 +37,7 @@ export default async function Home() {
           <h1 className="font-sans text-3xl font-semibold tracking-tight text-foreground sm:text-4xl">
             Products
           </h1>
-          <p className="mt-2 max-w-2xl text-sm text-neutral-600 dark:text-neutral-400">
-            Fetched from the Fake Store API. Prices shown in USD.
-          </p>
+
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <ThemeToggle />
