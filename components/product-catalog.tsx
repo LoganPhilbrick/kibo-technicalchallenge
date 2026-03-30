@@ -29,7 +29,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
               src={product.image}
               alt={product.title}
               fill
-              className="object-contain p-6"
+              className="object-contain p-12"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
           </div>
