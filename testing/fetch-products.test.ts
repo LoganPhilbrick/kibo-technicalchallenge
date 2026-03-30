@@ -1,7 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { PRODUCTS_URL, fetchProducts } from "@/lib/fetch-products";
+import { fetchProducts } from "@/lib/fetch-products";
 import type { Product } from "@/lib/types/product";
+
+const TEST_PRODUCTS_URL = "https://test.com/products";
 
 const sampleProducts: Product[] = [
   {
@@ -15,12 +17,14 @@ const sampleProducts: Product[] = [
 
 describe("fetchProducts", () => {
   beforeEach(() => {
+    process.env.PRODUCTS_URL = TEST_PRODUCTS_URL;
     vi.stubGlobal("fetch", vi.fn());
   });
 
   afterEach(() => {
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
+    delete process.env.PRODUCTS_URL;
   });
 
   it("returns parsed products on successful response (happy path)", async () => {
@@ -33,7 +37,7 @@ describe("fetchProducts", () => {
 
     const result = await fetchProducts();
 
-    expect(fetch).toHaveBeenCalledWith(PRODUCTS_URL, undefined);
+    expect(fetch).toHaveBeenCalledWith(TEST_PRODUCTS_URL, undefined);
     expect(result).toEqual(sampleProducts);
   });
 
@@ -45,7 +49,7 @@ describe("fetchProducts", () => {
     const init = { next: { revalidate: 3600 } } as RequestInit;
     await fetchProducts(init);
 
-    expect(fetch).toHaveBeenCalledWith(PRODUCTS_URL, init);
+    expect(fetch).toHaveBeenCalledWith(TEST_PRODUCTS_URL, init);
   });
 
   it("throws when response is not ok (negative path)", async () => {

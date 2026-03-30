@@ -1,10 +1,9 @@
 import type { Product } from "@/lib/types/product";
 
-const productsUrl = process.env.PRODUCTS_URL;
-
 export async function fetchProducts(
   init?: RequestInit
 ): Promise<Product[]> {
+  const productsUrl = process.env.PRODUCTS_URL;
   if (!productsUrl) {
     throw new Error("productsUrl is not defined");
   }
