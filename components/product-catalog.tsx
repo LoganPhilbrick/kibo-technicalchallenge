@@ -56,7 +56,7 @@ export function ProductCatalog({ products }: ProductCatalogProps) {
                   image: product.image,
                 })
               }
-              className="mt-auto rounded-lg bg-foreground px-3 py-2 text-center text-sm font-medium text-background transition-opacity hover:opacity-90"
+              className="mt-auto rounded-lg bg-neutral-900 px-3 py-2 text-center text-sm font-medium text-background transition-colors hover:bg-neutral-100 dark:bg-neutral-50 dark:hover:bg-neutral-100 transition-opacity hover:opacity-90"
             >
               Add to cart
             </button>
