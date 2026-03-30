@@ -1,5 +1,6 @@
 import { CartIndicator } from "@/components/cart-indicator";
 import { ProductCatalog } from "@/components/product-catalog";
+import { ThemeToggle } from "@/components/theme-toggle";
 import type { Product } from "@/lib/types/product";
 
 const PRODUCTS_URL = "https://fakestoreapi.com/products";
@@ -24,7 +25,10 @@ export default async function Home() {
     products = await getProducts();
   } catch {
     return (
-      <main className="mx-auto flex min-h-[50vh] max-w-6xl flex-col items-center justify-center px-4 py-16">
+      <main className="relative mx-auto flex min-h-[50vh] max-w-6xl flex-col items-center justify-center px-4 py-16">
+        <div className="absolute right-4 top-4 sm:right-6">
+          <ThemeToggle />
+        </div>
         <h1 className="font-sans text-2xl font-semibold tracking-tight text-foreground">
           Something went wrong
         </h1>
@@ -47,7 +51,10 @@ export default async function Home() {
             Fetched from the Fake Store API. Prices shown in USD.
           </p>
         </div>
-        <CartIndicator />
+        <div className="flex shrink-0 items-center gap-2">
+          <ThemeToggle />
+          <CartIndicator />
+        </div>
       </header>
 
       <ProductCatalog products={products} />
