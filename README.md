@@ -2,6 +2,8 @@
 
 A Next.js storefront-style app that lists products from a remote API (fetched in the **browser** after the page loads—see [why](#why-fetch-from-the-browser-instead-of-the-server)), supports a persistent cart (Zustand), light/dark theming, and a responsive product catalog with a featured hero row.
 
+Public deployment: [https://kibo-technicalchallenge.vercel.app/](https://kibo-technicalchallenge.vercel.app/)
+
 ---
 
 ## Framework and library versions
