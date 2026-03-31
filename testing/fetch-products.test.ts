@@ -17,14 +17,14 @@ const sampleProducts: Product[] = [
 
 describe("fetchProducts", () => {
   beforeEach(() => {
-    process.env.PRODUCTS_URL = TEST_PRODUCTS_URL;
+    process.env.NEXT_PUBLIC_PRODUCTS_URL = TEST_PRODUCTS_URL;
     vi.stubGlobal("fetch", vi.fn());
   });
 
   afterEach(() => {
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
-    delete process.env.PRODUCTS_URL;
+    delete process.env.NEXT_PUBLIC_PRODUCTS_URL;
   });
 
   it("returns parsed products on successful response (happy path)", async () => {
@@ -41,12 +41,12 @@ describe("fetchProducts", () => {
     expect(result).toEqual(sampleProducts);
   });
 
-  it("forwards request init (e.g. Next cache options)", async () => {
+  it("forwards request init (e.g. cache options)", async () => {
     vi.mocked(fetch).mockResolvedValue(
       new Response(JSON.stringify([]), { status: 200 })
     );
 
-    const init = { next: { revalidate: 3600 } } as RequestInit;
+    const init = { cache: "no-store" } as RequestInit;
     await fetchProducts(init);
 
     expect(fetch).toHaveBeenCalledWith(TEST_PRODUCTS_URL, init);
