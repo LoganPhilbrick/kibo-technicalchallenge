@@ -1,6 +1,6 @@
 # Kibo Technical Challenge
 
-A Next.js storefront-style app that lists products from a remote API, supports a persistent cart (Zustand), light/dark theming, and a responsive product catalog with a featured hero row.
+A Next.js storefront-style app that lists products from a remote API (fetched in the **browser** after the page loads—see [why](#why-fetch-from-the-browser-instead-of-the-server)), supports a persistent cart (Zustand), light/dark theming, and a responsive product catalog with a featured hero row.
 
 ---
 
@@ -43,18 +43,25 @@ npm install
 
 ### 2. Environment variables
 
-Product data is loaded from a URL configured via **`PRODUCTS_URL`**.
+Product data is loaded from a URL configured via **`NEXT_PUBLIC_PRODUCTS_URL`**. The home page is a **client component**; it calls `fetchProducts()` in the browser, which issues `fetch` from the user’s device to the configured URL.
+
+#### Why fetch from the browser instead of the server?
+
+Requests that originate on the server (for example from a Next.js route handler or from `fetch` during SSR on **Vercel** or other hosts) leave through **datacenter / serverless IPs**. Some public product APIs treat those like bots or untrusted clients and respond with **403 Forbidden**, empty bodies, or strict rate limits. A **browser** request uses the visitor’s normal client IP and headers, which those APIs usually accept—similar to opening the JSON URL directly or calling the API from another front end. The trade-off is that the product URL must be **public** in the client bundle (see below).
+
+Because the name starts with `NEXT_PUBLIC_`, the value is **embedded in the client JavaScript bundle**. Do not put secrets there—only URLs that are safe to expose (for example, a public product JSON endpoint).
 
 1. Copy the example env file to `.env` (e.g. `cp .env.example .env` on macOS/Linux, or `copy .env.example .env` in Windows Command Prompt).
 
-2. Edit `.env` and set `PRODUCTS_URL` to your products API root (must return a JSON array of products). For the default Fake Store API:
+2. Edit `.env` and set `NEXT_PUBLIC_PRODUCTS_URL` to your products API URL (must return a JSON array of products). For the default Fake Store API:
 
    ```env
-   PRODUCTS_URL=https://fakestoreapi.com/products
-   # typically this info is private but for example I showed it here.
+   NEXT_PUBLIC_PRODUCTS_URL=https://fakestoreapi.com/products
    ```
 
-If `PRODUCTS_URL` is missing or empty, `fetchProducts` throws at runtime and the home page shows an error state.
+If `NEXT_PUBLIC_PRODUCTS_URL` is missing or empty, `fetchProducts` throws at runtime and the home page shows an error state.
+
+**Vercel / production:** Add `NEXT_PUBLIC_PRODUCTS_URL` under Project → Settings → Environment Variables for each environment you deploy (Production, Preview, etc.).
 
 ### 3. Development server
 
@@ -104,7 +111,7 @@ npm run test
 - **`testing/cart-store.test.ts`** — Cart store: add to cart, duplicate SKUs, quantity updates, removals, totals, and selectors.
 - **`testing/truncate-text.test.ts`** — Text truncation helper behavior.
 
-Tests run in the **Node** environment (no browser). Ensure `fetchProducts` tests set `process.env.PRODUCTS_URL` as expected (handled in the test file’s `beforeEach` / `afterEach`).
+Tests run in the **Node** environment (no browser). Ensure `fetchProducts` tests set `process.env.NEXT_PUBLIC_PRODUCTS_URL` as expected (handled in the test file’s `beforeEach` / `afterEach`).
 
 ### Adding tests
 
